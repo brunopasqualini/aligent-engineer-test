@@ -9,10 +9,20 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Carbon\Exceptions\Exception as CarbonExceptionBase;
 
-abstract class DateTimeControllerBase extends Controller implements DateTimeCalculationResultConverter
+abstract class DateTimeControllerBase extends Controller
 {
+    /**
+     * API expected Date Time format - Y-m-d\TH:i:sP
+     * ATOM is an enhanced version of ISO8601 for PHP
+     */
     private const EXPECTED_DATE_TIME_FORMAT = \DateTime::ATOM;
 
+    /**
+     * Method that validates the data/fields received from the API call.
+     * The validation basically checks whether the data provided in each
+     * expected field is valid and if the required fields are present in
+     * the request
+     */
     private function validateApiFields()
     {
         $dateValidationRule = [
@@ -42,12 +52,15 @@ abstract class DateTimeControllerBase extends Controller implements DateTimeCalc
     /**
      * Process the API call
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
     {
+        // validate the API request fields/data
         $this->validateApiFields($request);
 
+        // instantiate the date time objects based on the data from the request
         $startDate = Carbon::createFromFormat(
             self::EXPECTED_DATE_TIME_FORMAT,
             request('date_time.start')
@@ -57,17 +70,46 @@ abstract class DateTimeControllerBase extends Controller implements DateTimeCalc
             request('date_time.end')
         );
 
+        // calculate the difference between the dates provided in the request
         $result = $this->calculate(
             $request,
             $this->handleRequestTimezoneField($startDate),
             $this->handleRequestTimezoneField($endDate)
         );
 
+        // return the result to the client
         return [
             'result' => $this->handleCalculationResult($result)
         ];
     }
 
+    /**
+     * Method to be implemented by child classes to do their own calculation
+     * based on the date time parameters provided
+     *
+     * @param Request $request
+     * @param Carbon $dateOne
+     * @param Carbon $dateTwo
+     * @return int
+     */
+    protected abstract function calculate(Request $request, Carbon $dateOne, Carbon $dateTwo): int;
+
+    /**
+     * Method to be implemented by child classes to convert the result derived
+     * from the calculation method (eg. the number of days between to two dates)
+     * into seconds
+     *
+     * @param int $resultFromCalculation
+     * @return int
+     */
+    protected abstract function convertResultIntoSeconds(int $resultFromCalculation): int;
+
+    /**
+     * Sets the timezone of the date to the one specified in the API request
+     *
+     * @param Carbon $date
+     * @return Carbon
+     */
     private function handleRequestTimezoneField(Carbon $date): Carbon
     {
         if (!isset(request()->timezone)) {
@@ -77,17 +119,19 @@ abstract class DateTimeControllerBase extends Controller implements DateTimeCalc
     }
 
     /**
-     * Method to be implemented by child classes to do their own calculation based on the date time parameters provided
+     * Transform the original calculation result into a specific output
+     * such as HOURS, MINUTES, SECONDS or YEARS
      *
+     * @param int $calculationResult
      * @return int
      */
-    protected abstract function calculate(Request $request, Carbon $dateOne, Carbon $dateTwo): int;
-
-    protected final function handleCalculationResult(int $result): int
+    protected final function handleCalculationResult(int $calculationResult): int
     {
         if (!isset(request()->output_type)) {
-            return $result;
+            return $calculationResult;
         }
-        return ControllerOutputFactory::createFromType(request()->output_type)->calculate($result, $this);
+        return ControllerOutputFactory::createFromType(
+            request()->output_type
+        )->getOutputFromResultInSeconds($this->convertResultIntoSeconds($calculationResult));
     }
 }

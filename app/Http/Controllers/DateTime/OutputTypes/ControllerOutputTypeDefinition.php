@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers\DateTime\OutputTypes;
 
-use App\Http\Controllers\DateTime\DateTimeCalculationResultConverter as CalculationResultConverter;
-
 interface ControllerOutputTypeDefinition
 {
-    public function calculate(int $calculationResult, CalculationResultConverter $resultConverter): int;
+
+    /**
+     * Method to be impleted by child classes to convert the original calculation result into
+     * their respective output such as HOURS, MINUTES, SECONDS or YEARS
+     *
+     * @param int $resultInSeconds
+     * @return int
+     */
+    public function getOutputFromResultInSeconds(int $resultInSeconds): int;
 }

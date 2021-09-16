@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\DateTime\OutputTypes;
 
-use App\Http\Controllers\DateTime\DateTimeCalculationResultConverter as CalculationResultConverter;
-
 class ControllerOutputTypeSeconds implements ControllerOutputTypeDefinition
 {
-    public function calculate(int $calculationResult, CalculationResultConverter $resultConverter): int
+
+    /**
+     * Convert the original calculation result into SECONDS
+     *
+     * @param int $resultInSeconds
+     * @return int
+     */
+    public function getOutputFromResultInSeconds(int $resultInSeconds): int
     {
-        return $resultConverter->convertToSeconds($calculationResult);
+        return $resultInSeconds;
     }
 }

@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\DateTime\OutputTypes;
 
-use App\Http\Controllers\DateTime\DateTimeCalculationResultConverter as CalculationResultConverter;
-
 class ControllerOutputTypeHours implements ControllerOutputTypeDefinition
 {
     public const HOUR_IN_SECONDS = 3600;
 
-    public function calculate(int $calculationResult, CalculationResultConverter $resultConverter): int
+    /**
+     * Convert the original calculation result into HOURS
+     *
+     * @param int $resultInSeconds
+     * @return int
+     */
+    public function getOutputFromResultInSeconds(int $resultInSeconds): int
     {
-        return floor($resultConverter->convertToSeconds($calculationResult) / self::HOUR_IN_SECONDS);
+        return floor($resultInSeconds / self::HOUR_IN_SECONDS);
     }
 }

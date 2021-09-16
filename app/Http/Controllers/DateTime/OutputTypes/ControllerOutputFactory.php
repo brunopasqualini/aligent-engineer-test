@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\DateTime\OutputTypes;
 
-use App\Http\Controllers\DateTime\DateTimeCalculationResultConverter as CalculationResultConverter;
-
 final class ControllerOutputFactory
 {
     public const OUTPUT_TYPE_SECONDS = 'SECONDS';
@@ -11,6 +9,11 @@ final class ControllerOutputFactory
     public const OUTPUT_TYPE_HOURS   = 'HOURS';
     public const OUTPUT_TYPE_YEARS   = 'YEARS';
 
+    /**
+     * Return an array with the available output type options
+     *
+     * @return array
+     */
     public static function getOutputTypesAsArray(): array
     {
         return [
@@ -21,12 +24,23 @@ final class ControllerOutputFactory
         ];
     }
 
+    /**
+     * Create the corresponding ControllerOutputTypeDefinition instance based on the output type provided
+     *
+     * @param string $outputType
+     * @return ControllerOutputTypeDefinition
+     */
     public static function createFromType(string $outputType): ControllerOutputTypeDefinition
     {
-        $instance = self::createInstanceFromType($outputType);
-        return $instance;
+        return self::createInstanceFromType($outputType);
     }
 
+    /**
+     * Create the corresponding ControllerOutputTypeDefinition instance based on the output type provided
+     *
+     * @param string $outputType
+     * @return ControllerOutputTypeDefinition
+     */
     private static function createInstanceFromType(string $outputType): ControllerOutputTypeDefinition
     {
         switch ($outputType) {
@@ -47,13 +61,18 @@ final class ControllerOutputFactory
         }
     }
 
+    /**
+     * Return a default instance of ControllerOutputTypeDefinition
+     *
+     * @return ControllerOutputTypeDefinition
+     */
     private static function getDefaultOutputTypeInstance(): ControllerOutputTypeDefinition
     {
         return new class() implements ControllerOutputTypeDefinition
         {
-            public function calculate(int $calculationResult, CalculationResultConverter $resultConverter): int
+            public function getOutputFromResultInSeconds(int $resultInSeconds): int
             {
-                return $calculationResult;
+                return $resultInSeconds;
             }
         };
     }
