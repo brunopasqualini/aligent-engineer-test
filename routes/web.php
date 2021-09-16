@@ -2,6 +2,10 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Http\Controllers\DateTime\NumberCompleteWeeksController;
+use App\Http\Controllers\DateTime\NumberDaysController;
+use App\Http\Controllers\DateTime\NumberWeekDaysController;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,5 +18,11 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'Aligent - Programming Test';
+});
+
+$router->group(['prefix' => 'datetime'], function () use ($router) {
+    $router->post('/days', NumberDaysController::class);
+    $router->post('/weekdays', NumberWeekDaysController::class);
+    $router->post('/completeweeks', NumberCompleteWeeksController::class);
 });
