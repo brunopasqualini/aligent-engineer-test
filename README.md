@@ -44,7 +44,7 @@ This endpoint calculates the number of complete weeks between two datetime param
 | ------------- | ------------- | ------------- |
 | http://localhost:8000/datetime  | /completeweeks  | POST
 
-## API Endpoint - Parameters & Responses
+## API Endpoints - Parameters & Responses
 All endpoints expect the same input parameters, although they return different information from one another. Below are the explanation of the parameters that can be sent in the HTTP requests to the endpoints.
 
 ##### > *date_time* parameter
@@ -136,7 +136,7 @@ The *timezone* and *output_type* properties can be used in conjunction with each
     "result": 10080
 }
 ```
-## API Endpoint - Invalid Parameters & Responses
+## API Endpoints - Invalid Parameters & Responses
 Whenever an endpoint handles a HTTP request, it validates the parameters received from the request to check whether they are valid. If the parameters are invalid and not acceptable by the endpoint, the endpoint itself will return error messages showing the specific fields that have been misprovided or provided incorrectly. Below are some examples as to what endpoint return when there is missing or incorrect data. It is crucial to mention that in case of invalid parameters being provided, the endpoints will return a [422 response status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422) in the header of the HTTP response rather than the usual [200 - OK](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200).
 
 > Missing **date_time.start**
@@ -196,3 +196,4 @@ php ./vendor/phpunit/phpunit/phpunit
 ```
 
 ## Challenges faced during development
+The first challenge that I came across at the very first stages of the implementation of this task was to come up with a set of classes that would give me flexibility to easily maintain existing endpoints and easily add new ones as required to the API. I spent more time coming up with a structure of classes and defining how they would comunicate with each other than actually implementing the entire solution. Moreover, I spent a reasonable amount of time researching about how timezones work and which date time formats are recommended for third-party integration and designing APIs. Lastly, I noticed that while I was writing the unit tests to cover different scenarios that the endpoints can be potentially used, I was also able to improve parts of the code as my tests would fail, would not work as expected or even would work differently from what I originally thought before writing the unit tests.
