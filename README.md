@@ -13,7 +13,7 @@ The [official documentation](https://lumen.laravel.com/docs/8.x/installation) re
 
 ## Running the application
 
-This application has been initially tested on a Windows environment using PHP 7.4.9 and Apache Apache/2.4.43 (Win64) but it also possible to serve the project using PHP's built-in web server by using the following command line on the main directory of the project:
+This application has been initially tested on a Windows environment using PHP 7.4.9 and Apache Apache/2.4.43 (Win64) but it is also possible to serve the project using PHP's built-in web server by using the following command line on the main directory of the project:
 
 ```sh
 php -S localhost:8000 -t public
@@ -21,7 +21,7 @@ php -S localhost:8000 -t public
 
 ## API & Endpoints
 
-In order to meet the requirements of this challenge, three different endpoints have been created. The following sections will be describing each of this endpoints and their respective functionalities.
+In order to meet the requirements of this challenge, three different endpoints have been created. The following sections will be describing each of these endpoints and their respective functionalities.
 
 ##### 1. Number of days between two dates
 
@@ -44,11 +44,14 @@ This endpoint calculates the number of complete weeks between two datetime param
 | ------------- | ------------- | ------------- |
 | http://localhost:8000/datetime  | /completeweeks  | POST
 
-## API Endpoint Parameters & Responses
+## API Endpoint - Parameters & Responses
 All endpoints expect the same input parameters, although they return different information from one another. Below are the explanation of the parameters that can be sent in the HTTP requests to the endpoints.
 
 ##### > *date_time* parameter
 The *date_time* property and its inner object are mandatory fields and therefore no requests will be processed without them.
+
+> **Date format expected**: Y-m-d\TH:i:sP - [ATOM](https://www.php.net/manual/en/class.datetimeinterface.php#datetime.constants.atom)
+[DateTime::ATOM vs DateTime::ISO8601](https://www.designcise.com/web/tutorial/whats-the-difference-between-php-datetime-atom-and-datetime-iso8601)
 
 ***Request Body***
 
@@ -60,7 +63,7 @@ The *date_time* property and its inner object are mandatory fields and therefore
     }
 }
 ```
-*Example response using the **/days** endpoint*
+*Example response using the [**/days**](#1-number-of-days-between-two-dates) endpoint*
 
 ```javascript
 {
@@ -82,7 +85,7 @@ The *output_type* property defines the type that the output of a particular *end
     "output_type" : "MINUTES"
 }
 ```
-*Example response using the **/days** endpoint*. One year(365 days) has 525600 minutes.
+*Example response using the [**/days**](#1-number-of-days-between-two-dates) endpoint*. One year(365 days) has 525600 minutes.
 
 ```javascript
 {
@@ -90,7 +93,7 @@ The *output_type* property defines the type that the output of a particular *end
 }
 ```
 ##### > *timezone* parameter
-The *timezone* property specifies a timezone to be used in the comparison of two date time parameters from different timezones.
+The *timezone* property specifies a timezone to be used in the comparison of two datetime parameters from different timezones.
 > **Timezones**: [Supported Timezones](https://www.php.net/manual/en/timezones.php)
 
 ***Request Body***
@@ -104,7 +107,7 @@ The *timezone* property specifies a timezone to be used in the comparison of two
     "timezone": "Australia/Adelaide"
 }
 ```
-*Example response using the **/completeweeks** endpoint*.
+*Example response using the [**/completeweeks**](#3-number-of-complete-weeks-between-two-dates) endpoint*.
 
 ```javascript
 {
@@ -133,3 +136,63 @@ The *timezone* and *output_type* properties can be used in conjunction with each
     "result": 10080
 }
 ```
+## API Endpoint - Invalid Parameters & Responses
+Whenever an endpoint handles a HTTP request, it validates the parameters received from the request to check whether they are valid. If the parameters are invalid and not acceptable by the endpoint, the endpoint itself will return error messages showing the specific fields that have been misprovided or provided incorrectly. Below are some examples as to what endpoint return when there is missing or incorrect data. It is crucial to mention that in case of invalid parameters being provided, the endpoints will return a [422 response status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422) in the header of the HTTP response rather than the usual [200 - OK](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200).
+
+> Missing **date_time.start**
+```javascript
+{
+    "date_time.start": [
+        "The start date field is required"
+    ]
+}
+```
+> Invalid **date_time.start** format
+```javascript
+{
+    "date_time.start": [
+        "The field date_time.start is invalid.The expected date time format is: Y-m-d\TH:i:sP"
+    ]
+}
+```
+> Missing **date_time.end**
+```javascript
+{
+    "date_time.start": [
+        "The end date field is required"
+    ]
+}
+```
+> Invalid **date_time.end** format
+```javascript
+{
+    "date_time.start": [
+        "The field date_time.end is invalid.The expected date time format is: Y-m-d\TH:i:sP"
+    ]
+}
+```
+> Invalid **output_type** option
+```javascript
+{
+    "output_type": [
+        "The selected output type is invalid."
+    ]
+}
+```
+> Invalid **timezone** option
+```javascript
+{
+    "timezone": [
+        "The timezone must be a valid zone."
+    ]
+}
+```
+
+## Running Unit Tests
+Unit tests have been written to ensure that the endpoints and classes developed to support these endpoints keep working during the entire development lifecycle of the application. The following command must be executed on the main folder of the application to run all the unit tests.
+
+```sh
+php ./vendor/phpunit/phpunit/phpunit
+```
+
+## Challenges faced during development
