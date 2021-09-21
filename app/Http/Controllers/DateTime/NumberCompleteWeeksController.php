@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 
 class NumberCompleteWeeksController extends DateTimeControllerBase
 {
-    public const WEEK_IN_SECONDS = 604800;
-
     /**
      * Calculate and return the number of complete weeks between the date parameters
      *
@@ -30,6 +28,6 @@ class NumberCompleteWeeksController extends DateTimeControllerBase
      */
     public function convertResultIntoSeconds(int $resultFromCalculation): int
     {
-        return $resultFromCalculation * self::WEEK_IN_SECONDS;
+        return $resultFromCalculation * 7 * NumberDaysController::DAY_IN_SECONDS;
     }
 }

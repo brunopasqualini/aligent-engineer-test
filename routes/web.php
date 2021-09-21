@@ -4,7 +4,7 @@
 
 use App\Http\Controllers\DateTime\NumberCompleteWeeksController;
 use App\Http\Controllers\DateTime\NumberDaysController;
-use App\Http\Controllers\DateTime\NumberWeekDaysController;
+use App\Http\Controllers\DateTime\NumberWeekdaysController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +23,6 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'datetime'], function () use ($router) {
     $router->post('/days', NumberDaysController::class);
-    $router->post('/weekdays', NumberWeekDaysController::class);
+    $router->post('/weekdays', NumberWeekdaysController::class);
     $router->post('/completeweeks', NumberCompleteWeeksController::class);
 });

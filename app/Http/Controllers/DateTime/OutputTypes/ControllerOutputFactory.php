@@ -57,23 +57,7 @@ final class ControllerOutputFactory
                 return new ControllerOutputTypeYears();
 
             default:
-                return self::getDefaultOutputTypeInstance();
+                throw new ControllerOutputFactoryException();
         }
-    }
-
-    /**
-     * Return a default instance of ControllerOutputTypeDefinition
-     *
-     * @return ControllerOutputTypeDefinition
-     */
-    private static function getDefaultOutputTypeInstance(): ControllerOutputTypeDefinition
-    {
-        return new class() implements ControllerOutputTypeDefinition
-        {
-            public function getOutputFromResultInSeconds(int $resultInSeconds): int
-            {
-                return $resultInSeconds;
-            }
-        };
     }
 }

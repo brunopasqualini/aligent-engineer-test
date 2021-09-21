@@ -5,7 +5,7 @@ namespace App\Http\Controllers\DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class NumberWeekDaysController extends DateTimeControllerBase
+class NumberWeekdaysController extends DateTimeControllerBase
 {
 
     /**

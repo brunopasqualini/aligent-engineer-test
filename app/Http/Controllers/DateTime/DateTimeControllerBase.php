@@ -127,7 +127,7 @@ abstract class DateTimeControllerBase extends Controller
      */
     protected final function handleCalculationResult(int $calculationResult): int
     {
-        if (!isset(request()->output_type)) {
+        if (!isset(request()->output_type) || trim(request()->output_type . '') == '') {
             return $calculationResult;
         }
         return ControllerOutputFactory::createFromType(
